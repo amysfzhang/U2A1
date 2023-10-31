@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.u2a1_amyzhang;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 
 /**
  *
@@ -10,10 +12,11 @@ package com.mycompany.u2a1_amyzhang;
  */
 public class Vehicle {
     
+    private String model;
     private int passengerNum;
-    private double passengerFare, fuelEfficiency;
+    private double passengerFare, fuelEfficiency, distance;
     private static double gasPrice;
-    private static final int PROFIT = 400; //check if final is needed
+    private final int PROFIT = 400; //check if final is needed
     
     public Vehicle (int passengerNum, double passengerFare, double fuelEfficiency) {
         this.passengerNum = passengerNum;
@@ -25,24 +28,88 @@ public class Vehicle {
         return passengerNum * passengerFare;
     }
     
-    public double totalCost(int distance) {
+    public double totalCost() {
         return distance * fuelEfficiency * gasPrice;
     }
     
     public double calculateProfit() {
-        return this.revenue() - this.totalCost(distance);
+        return this.revenue() - this.totalCost();
     }
     
-    public static double compareTo(Vehicle vehicle1, Vehicle vehicle2) {
-        //if (vehicle1.getProfit() > vehicle2.getProfit()) return vehicle1
-        //else return vehicle2
+    public boolean isProfitable() {
+        if (this.calculateProfit() > PROFIT) {
+            return true;
+        } else {
+                return false;
+        }
+    }
+    
+    public static Vehicle compareTo(Vehicle a, Vehicle b) {
+        if (a.calculateProfit() > b.calculateProfit()) {
+            return a;
+        } else {
+            return b;
+        }
     }
 
     @Override
     public String toString() {
-        //use content method
-        return "Vehicle{" + "passengerNum=" + passengerNum + ", passengerFare=" + passengerFare + ", fuelEfficiency=" + fuelEfficiency + '}';
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    //setter methods
+    public void setPassengerNum(int passengerNum) {
+        this.passengerNum = passengerNum;
+    }
+
+    public void setPassengerFare(double passengerFare) {
+        this.passengerFare = passengerFare;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setFuelEfficiency(double fuelEfficiency) {
+        this.fuelEfficiency = fuelEfficiency;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public static void setGasPrice(double gasPrice) {
+        Vehicle.gasPrice = gasPrice;
+    }
+
+    //getter methods
+    public int getPassengerNum() {
+        return passengerNum;
+    }
+
+    public double getPassengerFare() {
+        return passengerFare;
+    }
+
+    public double getFuelEfficiency() {
+        return fuelEfficiency;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public static double getGasPrice() {
+        return gasPrice;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public int getPROFIT() {
+        return PROFIT;
     }
     
-    
+     
 }
