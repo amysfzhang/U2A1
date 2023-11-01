@@ -23,6 +23,14 @@ public class Vehicle {
         this.passengerFare = passengerFare;
         this.fuelEfficiency = fuelEfficiency;
     }
+
+    public Vehicle(String model, int passengerNum, double passengerFare, double fuelEfficiency, double distance) {
+        this.model = model;
+        this.passengerNum = passengerNum;
+        this.passengerFare = passengerFare;
+        this.fuelEfficiency = fuelEfficiency;
+        this.distance = distance;
+    }
     
     public double revenue() {
         return passengerNum * passengerFare;
