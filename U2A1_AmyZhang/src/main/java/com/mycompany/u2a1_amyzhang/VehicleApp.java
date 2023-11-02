@@ -5,6 +5,7 @@
 package com.mycompany.u2a1_amyzhang;
 
 import java.util.*;//to make ArrayList
+import javax.swing.ListSelectionModel;
 /**
  *
  * @author 342905163
@@ -18,6 +19,7 @@ public class VehicleApp extends javax.swing.JFrame {
      */
     public VehicleApp() {
         initComponents();
+        listInventory.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
     }
 
     /**
@@ -87,7 +89,12 @@ public class VehicleApp extends javax.swing.JFrame {
             }
         });
 
-        btnEdit.setText("Save Edits");
+        btnEdit.setText("Calculate");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         lblError.setText(" ");
 
@@ -248,13 +255,15 @@ public class VehicleApp extends javax.swing.JFrame {
             Vehicle.setGasPrice(Double.parseDouble(lblGasPrice.getText()));
         } catch (NumberFormatException e) {
             lblError.setText("Enter the gas price per litres");
+            return;
         }
 
         //create new vehicle using input values
         try {
             vehicles.add(new Vehicle(Integer.parseInt(txtPassengers.getText()), Double.parseDouble(txtFuel.getText()), Double.parseDouble(txtFare.getText())));
         } catch (NumberFormatException e) {
-            lblError.setText("Enter the gas price per litres");
+            lblError.setText("Enter the variables");
+            return;
         }
         //or if one is empty
         //vehicles.add(new Vehicle(txtModel.getText(), Integer.parseInt(txtPassengers.getText()), Double.parseDouble(txtFuel.getText()), Double.parseDouble(txtFare.getText()), Double.parseDouble(txtDistance.getText())));
@@ -262,6 +271,11 @@ public class VehicleApp extends javax.swing.JFrame {
         Vector itemsVector = new Vector(vehicles);
         listInventory.setListData(itemsVector);
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        //get selection
+        listInventory.getSelectedIndex();
+    }//GEN-LAST:event_btnEditActionPerformed
 
     /**
      * @param args the command line arguments
