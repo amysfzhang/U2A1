@@ -294,22 +294,31 @@ public class VehicleApp extends javax.swing.JFrame {
         //checking # of Passengers
         try {
             passengerNum = Integer.parseInt(txtPassengers.getText());
+            if (passengerNum < 0) {
+                throw new NumberFormatException();
+            }
         } catch (NumberFormatException e) {
-            lblErrorAdd.setText("Number of passengers is not an integer");
+            lblErrorAdd.setText("Number of passengers is not a positive integer");
             return;
         }
         //checking Fuel Efficiency        
         try {
             fuelEfficency = Double.parseDouble(txtFuel.getText());
+            if (fuelEfficency < 0) {
+                throw new NumberFormatException();
+            }
         } catch (NumberFormatException e) { 
-           lblErrorAdd.setText("Fuel Efficiency is not a decimal");
+           lblErrorAdd.setText("Fuel Efficiency is not a positive decimal");
             return;
         }
         //checking Fare per Passenger    
         try {
             fare = Double.parseDouble(txtFare.getText());
+            if (fare < 0) {
+                throw new NumberFormatException();
+            }
         } catch (NumberFormatException e) {
-            lblErrorAdd.setText("Fare per Passenger is not a decimal");
+            lblErrorAdd.setText("Fare per Passenger is not a positive decimal");
             return;
         }
 
@@ -345,16 +354,24 @@ public class VehicleApp extends javax.swing.JFrame {
         
         //checking if gas price is valid
         try {
-            Vehicle.setGasPrice(Double.parseDouble(txtGasPrice.getText()));
+            double gasPrice = Double.parseDouble(txtGasPrice.getText());
+            if (gasPrice < 0) {
+                throw new NumberFormatException();
+            }
+            Vehicle.setGasPrice(gasPrice);
         } catch (NumberFormatException e) {
-            lblErrorCalculate.setText("Gas Price is not a decimal value");
+            lblErrorCalculate.setText("Gas Price is not a positive decimal value");
             return;
         }
         //checking if distance is valid
         try {
-            Vehicle.setDistance(Double.parseDouble(txtDistance.getText()));
+            double distance = Double.parseDouble(txtDistance.getText());
+            if (distance < 0) {
+                throw new NumberFormatException();
+            }
+            Vehicle.setDistance(distance);
         } catch (NumberFormatException e) {
-            lblErrorCalculate.setText("Distance is not a decimal value");
+            lblErrorCalculate.setText("Distance is not a positive decimal value");
             return;
         }
 
@@ -378,19 +395,32 @@ public class VehicleApp extends javax.swing.JFrame {
         
         //checking if gas price is valid
         try {
-            Vehicle.setGasPrice(Double.parseDouble(txtGasPrice.getText()));
+            double gasPrice = Double.parseDouble(txtGasPrice.getText());
+            if (gasPrice < 0) {
+                throw new NumberFormatException();
+            }
+            Vehicle.setGasPrice(gasPrice);
         } catch (NumberFormatException e) {
             lblErrorCompare.setText("Gas Price is not a decimal value");
             return;
         }
         //checking if distance is valid
         try {
-            Vehicle.setDistance(Double.parseDouble(txtDistance.getText()));
+            double distance = Double.parseDouble(txtDistance.getText());
+            if (distance < 0) {
+                throw new NumberFormatException();
+            }
+            Vehicle.setDistance(distance);
         } catch (NumberFormatException e) {
             lblErrorCompare.setText("Distance is not a decimal value");
             return;
         }
 
+        //check if vehicle is selected from combo box
+        if (comboVehicle1.getSelectedIndex() == -1 || comboVehicle2.getSelectedIndex() == -1) {
+            lblErrorCompare.setText("Please select two vehicles for comparison");
+            return;
+        }
         //Get items from each combo box
         Vehicle a = vehicles.get(comboVehicle1.getSelectedIndex());
         Vehicle b = vehicles.get(comboVehicle2.getSelectedIndex());
