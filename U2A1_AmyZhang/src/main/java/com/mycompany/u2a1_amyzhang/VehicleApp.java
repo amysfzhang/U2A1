@@ -4,22 +4,26 @@
  */
 package com.mycompany.u2a1_amyzhang;
 
-import java.util.*;//to make ArrayList
-import javax.swing.ListSelectionModel;
+import java.util.*;
+import javax.swing.table.*;
+import javax.swing.*;
+
 /**
  *
- * @author 342905163
+ * @author Amy Zhang
+ * Date: November 3, 2023
+ * Utilizing Vehicles Class for a trip planner
+ * 
  */
 public class VehicleApp extends javax.swing.JFrame {
-
     ArrayList<Vehicle> vehicles = new ArrayList<>();
-    
+
     /**
-     * Creates new form VehicleApp
+     * Creates new form NewJFrame
      */
     public VehicleApp() {
         initComponents();
-        listInventory.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tableVehicles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//only one row can be selected at a time
     }
 
     /**
@@ -31,56 +35,87 @@ public class VehicleApp extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableVehicles = new javax.swing.JTable();
+        txtCompare = new javax.swing.JTextField();
+        btnCompare = new javax.swing.JButton();
+        comboVehicle2 = new javax.swing.JComboBox<>();
+        comboVehicle1 = new javax.swing.JComboBox<>();
         txtPassengers = new javax.swing.JTextField();
         txtFare = new javax.swing.JTextField();
-        txtDistance = new javax.swing.JTextField();
-        txtGasPrice = new javax.swing.JTextField();
-        txtFuel = new javax.swing.JTextField();
-        txtModel = new javax.swing.JTextField();
-        lblModel = new javax.swing.JLabel();
-        lblPassengers = new javax.swing.JLabel();
-        lblFuel = new javax.swing.JLabel();
         lblFare = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        listInventory = new javax.swing.JList<>();
-        lblGasPrice = new javax.swing.JLabel();
-        lblDistance = new javax.swing.JLabel();
+        lblPassengers = new javax.swing.JLabel();
+        txtFuel = new javax.swing.JTextField();
+        txtLicensePlate = new javax.swing.JTextField();
+        lblModel = new javax.swing.JLabel();
+        lblFuel = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
-        btnEdit = new javax.swing.JButton();
-        lblError = new javax.swing.JLabel();
-        btnCompare = new javax.swing.JButton();
-        txtMoreProfit = new javax.swing.JTextField();
-        comboVehicle1 = new javax.swing.JComboBox<>();
-        comboVehicle2 = new javax.swing.JComboBox<>();
+        lblErrorAdd = new javax.swing.JLabel();
+        lblGasPrice = new javax.swing.JLabel();
+        txtGasPrice = new javax.swing.JTextField();
+        lblDistance = new javax.swing.JLabel();
+        txtDistance = new javax.swing.JTextField();
+        lblTitle = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        lblProfitable = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        btnCalculate = new javax.swing.JButton();
+        lblErrorCalculate = new javax.swing.JLabel();
+        lblErrorCompare = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Trip Planner");
 
-        jLabel1.setFont(new java.awt.Font("Rockwell", 0, 24)); // NOI18N
-        jLabel1.setText("Uber Manager");
-        jLabel1.setToolTipText("");
+        tableVehicles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        lblModel.setText("Model");
+            },
+            new String [] {
+                "", "License Plate", "Revenue ($)", "Total Cost ($)", "Profit ($)", "Profitable"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
-        lblPassengers.setText("Passengers");
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
-        lblFuel.setText("Fuel Efficiency");
-
-        lblFare.setText("Fare");
-
-        listInventory.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane1.setViewportView(listInventory);
+        tableVehicles.setShowVerticalLines(true);
+        tableVehicles.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableVehiclesMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableVehicles);
+        if (tableVehicles.getColumnModel().getColumnCount() > 0) {
+            tableVehicles.getColumnModel().getColumn(0).setPreferredWidth(25);
+            tableVehicles.getColumnModel().getColumn(1).setPreferredWidth(150);
+            tableVehicles.getColumnModel().getColumn(3).setPreferredWidth(80);
+        }
 
-        lblGasPrice.setText("Gas Price");
+        txtCompare.setEditable(false);
 
-        lblDistance.setText("Distance");
+        btnCompare.setText("Compare");
+        btnCompare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompareActionPerformed(evt);
+            }
+        });
+
+        lblFare.setText("Fare per Passenger ($)");
+
+        lblPassengers.setText("# of Passengers");
+
+        lblModel.setText("License Plate");
+
+        lblFuel.setText("Fuel Efficiency (L/km)");
 
         btnAdd.setText("Add");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
@@ -89,191 +124,298 @@ public class VehicleApp extends javax.swing.JFrame {
             }
         });
 
-        btnEdit.setText("Calculate");
-        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+        lblErrorAdd.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        lblErrorAdd.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorAdd.setText(" ");
+
+        lblGasPrice.setText("Gas Price ($/L)");
+
+        lblDistance.setText("Distance (km)");
+
+        lblTitle.setFont(new java.awt.Font("Rockwell", 0, 48)); // NOI18N
+        lblTitle.setText("Trip Planner");
+        lblTitle.setToolTipText("");
+
+        btnCalculate.setText("Calculate");
+        btnCalculate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditActionPerformed(evt);
+                btnCalculateActionPerformed(evt);
             }
         });
 
-        lblError.setText(" ");
+        lblErrorCalculate.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        lblErrorCalculate.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorCalculate.setText(" ");
 
-        btnCompare.setText("Compare");
-
-        txtMoreProfit.setText("... is more profitable");
-
-        comboVehicle1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        comboVehicle2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        lblProfitable.setText(" ");
-
-        jLabel3.setFont(new java.awt.Font("Rockwell", 1, 14)); // NOI18N
-        jLabel3.setText("Inventory");
+        lblErrorCompare.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        lblErrorCompare.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorCompare.setText(" ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator1)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblErrorCompare, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCompare))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblErrorAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAdd))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(comboVehicle1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(comboVehicle2, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtCompare))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblFuel, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblModel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtFuel)
+                                            .addComponent(txtLicensePlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblPassengers, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblFare, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtPassengers, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                                            .addComponent(txtFare))))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addGap(25, 25, 25))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(270, 270, 270))
+                .addComponent(lblErrorCalculate, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCalculate)
+                .addGap(44, 44, 44))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(comboVehicle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(comboVehicle2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(btnCompare)
-                                        .addGap(14, 14, 14)
-                                        .addComponent(txtMoreProfit, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblGasPrice)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtGasPrice))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(lblFuel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(lblModel)
-                                                .addGap(48, 48, 48)))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtFuel, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
-                                            .addComponent(txtModel, javax.swing.GroupLayout.Alignment.TRAILING))
-                                        .addGap(28, 28, 28)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lblPassengers, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(lblFare))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtFare, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtPassengers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lblError, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(lblGasPrice)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEdit)
-                        .addGap(38, 38, 38))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
+                        .addComponent(txtGasPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(lblDistance)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblProfitable, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(43, 43, 43))))
+                        .addComponent(txtDistance, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(lblTitle)))
+                .addGap(41, 106, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitle)
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblModel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtFuel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFuel)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtGasPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblGasPrice))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblModel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtFuel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblFuel)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblPassengers)
-                                    .addComponent(txtPassengers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtFare, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblFare))))
-                        .addGap(18, 18, 18)
+                            .addComponent(lblPassengers)
+                            .addComponent(txtPassengers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAdd)
-                            .addComponent(btnEdit)
-                            .addComponent(lblError))
-                        .addGap(21, 21, 21)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(lblDistance))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblProfitable, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(28, 28, 28)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtMoreProfit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboVehicle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboVehicle2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCompare))
-                        .addGap(15, 15, 15))))
+                            .addComponent(txtFare, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFare))))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd)
+                    .addComponent(lblErrorAdd))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblGasPrice)
+                        .addComponent(txtGasPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(3, 3, 3)
+                            .addComponent(lblDistance))
+                        .addComponent(txtDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCalculate)
+                    .addComponent(lblErrorCalculate))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCompare, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboVehicle1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboVehicle2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCompare)
+                    .addComponent(lblErrorCompare))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Creates new Vehicle from user input, adds it to table
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        lblErrorAdd.setText("");//resetting error message
+        
+        //Create new Vehicle using input values
+        int passengerNum;
+        double fuelEfficency, fare;
+        
+        //checking # of Passengers
         try {
-            Vehicle.setGasPrice(Double.parseDouble(lblGasPrice.getText()));
+            passengerNum = Integer.parseInt(txtPassengers.getText());
         } catch (NumberFormatException e) {
-            lblError.setText("Enter the gas price per litres");
+            lblErrorAdd.setText("Number of passengers is not an integer");
+            return;
+        }
+        //checking Fuel Efficiency        
+        try {
+            fuelEfficency = Double.parseDouble(txtFuel.getText());
+        } catch (NumberFormatException e) { 
+           lblErrorAdd.setText("Fuel Efficiency is not a decimal");
+            return;
+        }
+        //checking Fare per Passenger    
+        try {
+            fare = Double.parseDouble(txtFare.getText());
+        } catch (NumberFormatException e) {
+            lblErrorAdd.setText("Fare per Passenger is not a decimal");
             return;
         }
 
-        //create new vehicle using input values
-        try {
-            vehicles.add(new Vehicle(Integer.parseInt(txtPassengers.getText()), Double.parseDouble(txtFuel.getText()), Double.parseDouble(txtFare.getText())));
-        } catch (NumberFormatException e) {
-            lblError.setText("Enter the variables");
-            return;
+        //checking Fare per Passenger            
+        String licensePlate = txtLicensePlate.getText().toUpperCase();
+        //runs different constructors depending on if licensePlate is empty
+        if (licensePlate.equals("")) {
+            vehicles.add(new Vehicle(passengerNum, fare, fuelEfficency));   
+        } else {
+            //checking if license plate already exists
+            for (Vehicle vehicle : vehicles) {
+                if (licensePlate.equals(vehicle.getLicensePlate())) {
+                    lblErrorAdd.setText("Another vehicle with the same license plate already exists");
+                    return;
+                }
+            }
+            vehicles.add(new Vehicle(licensePlate, passengerNum, fare, fuelEfficency));      
         }
-        //or if one is empty
-        //vehicles.add(new Vehicle(txtModel.getText(), Integer.parseInt(txtPassengers.getText()), Double.parseDouble(txtFuel.getText()), Double.parseDouble(txtFare.getText()), Double.parseDouble(txtDistance.getText())));
-        
-        Vector itemsVector = new Vector(vehicles);
-        listInventory.setListData(itemsVector);
+
+        //Add vehicle to arraylist and table
+        Object[] array = {tableVehicles.getRowCount() + 1, vehicles.get(vehicles.size()-1).getLicensePlate(), 0, 0, 0, false};
+        DefaultTableModel model = (DefaultTableModel)tableVehicles.getModel(); //gets model for column names
+        model.addRow(array);//add array as a row (notifies tableVehicles in GUI)
+
+        //Add vehicle index as option in comboboxes
+        comboVehicle1.addItem(String.valueOf(tableVehicles.getRowCount()));
+        comboVehicle2.addItem(String.valueOf(tableVehicles.getRowCount()));
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        //get selection
-        listInventory.getSelectedIndex();
-    }//GEN-LAST:event_btnEditActionPerformed
+    //Update each vehicle's values according to newly entered distance and gas price 
+    private void btnCalculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalculateActionPerformed
+        lblErrorCalculate.setText("");//resetting error message
+        
+        //checking if gas price is valid
+        try {
+            Vehicle.setGasPrice(Double.parseDouble(txtGasPrice.getText()));
+        } catch (NumberFormatException e) {
+            lblErrorCalculate.setText("Gas Price is not a decimal value");
+            return;
+        }
+        //checking if distance is valid
+        try {
+            Vehicle.setDistance(Double.parseDouble(txtDistance.getText()));
+        } catch (NumberFormatException e) {
+            lblErrorCalculate.setText("Distance is not a decimal value");
+            return;
+        }
+
+        //Creates model from table to edit
+        DefaultTableModel model = (DefaultTableModel)tableVehicles.getModel();
+        //removes all rows
+        while (model.getRowCount() != 0) {
+            model.removeRow(model.getRowCount() - 1);
+        }
+        //adds all rows back using gasprice and distance as parameters
+        for (int i = 0; i < vehicles.size(); i ++) {
+            Object[] array = {tableVehicles.getRowCount() + 1, vehicles.get(i).getLicensePlate(), vehicles.get(i).revenue(), vehicles.get(i).totalCost(), vehicles.get(i).calculateProfit(), vehicles.get(i).isProfitable()}; //calculates each column
+            model.addRow(array);//add array as a row
+        }
+    }//GEN-LAST:event_btnCalculateActionPerformed
+
+    //Compares the profit of two vehicles selected by the user
+    private void btnCompareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompareActionPerformed
+        lblErrorCompare.setText("");//resetting error message
+        txtCompare.setText("");//resetting error message 
+        
+        //checking if gas price is valid
+        try {
+            Vehicle.setGasPrice(Double.parseDouble(txtGasPrice.getText()));
+        } catch (NumberFormatException e) {
+            lblErrorCompare.setText("Gas Price is not a decimal value");
+            return;
+        }
+        //checking if distance is valid
+        try {
+            Vehicle.setDistance(Double.parseDouble(txtDistance.getText()));
+        } catch (NumberFormatException e) {
+            lblErrorCompare.setText("Distance is not a decimal value");
+            return;
+        }
+
+        //Get items from each combo box
+        Vehicle a = vehicles.get(comboVehicle1.getSelectedIndex());
+        Vehicle b = vehicles.get(comboVehicle2.getSelectedIndex());
+        //checking if selection is the same
+        if (comboVehicle1.getSelectedIndex() == comboVehicle2.getSelectedIndex()) {
+            lblErrorCompare.setText("Please select two different vehicles for comparison");
+            return;
+        }
+        //checking if they are equal, displays result
+        if (Vehicle.compareTo(a, b) == null) {
+            txtCompare.setText("Both vehicles are equally profitable"); 
+        } else {
+            txtCompare.setText("Vehicle " + (vehicles.indexOf(Vehicle.compareTo(a, b)) + 1) + " is more profitable");                
+        }
+    }//GEN-LAST:event_btnCompareActionPerformed
+
+    //Sets tool tip of table when a row is selected
+    private void tableVehiclesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableVehiclesMouseClicked
+        if (tableVehicles.getSelectedRow() == -1) {
+            return; //if no row is selected
+        } else {
+            //shows all entered info in tool tip of selected row
+            tableVehicles.setToolTipText(vehicles.get(tableVehicles.getSelectedRow()).toString());      
+        }
+    }//GEN-LAST:event_tableVehiclesMouseClicked
 
     /**
      * @param args the command line arguments
@@ -301,6 +443,7 @@ public class VehicleApp extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(VehicleApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -312,29 +455,29 @@ public class VehicleApp extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnCalculate;
     private javax.swing.JButton btnCompare;
-    private javax.swing.JButton btnEdit;
     private javax.swing.JComboBox<String> comboVehicle1;
     private javax.swing.JComboBox<String> comboVehicle2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblDistance;
-    private javax.swing.JLabel lblError;
+    private javax.swing.JLabel lblErrorAdd;
+    private javax.swing.JLabel lblErrorCalculate;
+    private javax.swing.JLabel lblErrorCompare;
     private javax.swing.JLabel lblFare;
     private javax.swing.JLabel lblFuel;
     private javax.swing.JLabel lblGasPrice;
     private javax.swing.JLabel lblModel;
     private javax.swing.JLabel lblPassengers;
-    private javax.swing.JLabel lblProfitable;
-    private javax.swing.JList<String> listInventory;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tableVehicles;
+    private javax.swing.JTextField txtCompare;
     private javax.swing.JTextField txtDistance;
     private javax.swing.JTextField txtFare;
     private javax.swing.JTextField txtFuel;
     private javax.swing.JTextField txtGasPrice;
-    private javax.swing.JTextField txtModel;
-    private javax.swing.JTextField txtMoreProfit;
+    private javax.swing.JTextField txtLicensePlate;
     private javax.swing.JTextField txtPassengers;
     // End of variables declaration//GEN-END:variables
 }
