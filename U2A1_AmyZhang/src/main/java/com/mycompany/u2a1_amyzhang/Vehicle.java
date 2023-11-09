@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.u2a1_amyzhang;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+//import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
@@ -106,6 +106,7 @@ public class Vehicle {
                 + ", passengerFare=" + passengerFare
                 + ", fuelEfficiency=" + fuelEfficiency 
                 + ", PROFIT=" + PROFIT + '}';
+        //ToStringBuilder.reflectionToString(this);
     }
 
     //Setter methods
